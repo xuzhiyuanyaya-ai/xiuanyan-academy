@@ -29,12 +29,12 @@ const name = subjectNames[subject] ?? subject;
 const icon = subjectIcons[subject] ?? '✦';
 
 const menuItems = [
-  { label: '路径图', href: `/${subject}/路径图` },
-  { label: '练习题', href: `/${subject}/练习题` },
-  { label: '案例库', href: `/${subject}/案例库` },
+  { label: '路径图', href: `/xiuanyan-academy/${subject}/路径图` },
+  { label: '练习题', href: `/xiuanyan-academy/${subject}/练习题` },
+  { label: '案例库', href: `/xiuanyan-academy/${subject}/案例库` },
 ];
 ---
-<SubjectLayout title={name} currentPath={`/${subject}`} sidebarItems={menuItems}>
+<SubjectLayout title={name} currentPath={`/xiuanyan-academy/${subject}`} sidebarItems={menuItems}>
   <div class="flex items-center gap-3 mb-6">
     <span class="text-4xl">{icon}</span>
     <div>
@@ -55,17 +55,17 @@ const menuItems = [
 
   <!-- Navigation cards -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-    <a href={`/${subject}/路径图`} class="block p-5 border border-[var(--color-notion-border)] rounded-lg hover:border-[var(--color-accent)] transition-all">
+    <a href={`/xiuanyan-academy/${subject}/路径图`} class="block p-5 border border-[var(--color-notion-border)] rounded-lg hover:border-[var(--color-accent)] transition-all">
       <div class="text-xl mb-2">🗺️</div>
       <h3 class="font-semibold mb-1">路径图</h3>
       <p class="text-sm text-[var(--color-notion-gray-text)]">里程碑节点与学习素材</p>
     </a>
-    <a href={`/${subject}/练习题`} class="block p-5 border border-[var(--color-notion-border)] rounded-lg hover:border-[var(--color-accent)] transition-all">
+    <a href={`/xiuanyan-academy/${subject}/练习题`} class="block p-5 border border-[var(--color-notion-border)] rounded-lg hover:border-[var(--color-accent)] transition-all">
       <div class="text-xl mb-2">📝</div>
       <h3 class="font-semibold mb-1">练习题</h3>
       <p class="text-sm text-[var(--color-notion-gray-text)]">在线答题，自动批改</p>
     </a>
-    <a href={`/${subject}/案例库`} class="block p-5 border border-[var(--color-notion-border)] rounded-lg hover:border-[var(--color-accent)] transition-all">
+    <a href={`/xiuanyan-academy/${subject}/案例库`} class="block p-5 border border-[var(--color-notion-border)] rounded-lg hover:border-[var(--color-accent)] transition-all">
       <div class="text-xl mb-2">📚</div>
       <h3 class="font-semibold mb-1">案例库</h3>
       <p class="text-sm text-[var(--color-notion-gray-text)]">教学案例与解析</p>

@@ -4,48 +4,49 @@ import Header from '../components/Header.astro';
 import SubjectCard from '../components/SubjectCard.astro';
 import ProgressBar from '../components/ProgressBar.astro';
 
+const BASE = '/xiuanyan-academy';
 const subjects = [
   {
     id: 'liuyao',
     name: '六爻',
     icon: '☰',
     description: '纳甲筮法，以五行生克推演世事吉凶',
-    path: '/liuyao',
+    path: `${BASE}/liuyao`,
   },
   {
     id: 'bazi',
     name: '八字',
     icon: '⌚',
     description: '四柱命理，推算人生富贵贫贱',
-    path: '/bazi',
+    path: `${BASE}/bazi`,
   },
   {
     id: 'yijing',
     name: '易经',
     icon: '☯',
     description: '群经之始，大道之源',
-    path: '/yijing',
+    path: `${BASE}/yijing`,
   },
   {
     id: 'qimen',
     name: '奇门',
     icon: '✦',
     description: '奇门遁甲，布局择时之学',
-    path: '/qimen',
+    path: `${BASE}/qimen`,
   },
   {
     id: 'liuren',
     name: '六壬',
     icon: '⬡',
     description: '大六壬，神课金口诀',
-    path: '/liuren',
+    path: `${BASE}/liuren`,
   },
   {
     id: 'fengshui',
     name: '风水',
     icon: '⌇',
     description: '地理堪舆，阴阳宅法',
-    path: '/fengshui',
+    path: `${BASE}/fengshui`,
   },
 ];
 ---

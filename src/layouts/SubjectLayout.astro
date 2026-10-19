@@ -9,11 +9,16 @@ interface Props {
 }
 const { title, currentPath, sidebarItems = [] } = Astro.props;
 
+// Extract subject from currentPath like /xiuanyan-academy/liuyao or /liuyao
+const match = currentPath.match(/\/(liuyao|bazi|yijing|qimen|liuren|fengshui)$/);
+const subject = match ? match[1] : 'liuyao';
+const BASE = '/xiuanyan-academy';
+
 const defaultItems = [
   { label: '科目介绍', href: `#intro` },
-  { label: '路径图', href: `/liuyao/路径图` },
-  { label: '练习题', href: `/liuyao/练习题` },
-  { label: '案例库', href: `/liuyao/案例库` },
+  { label: '路径图', href: `${BASE}/${subject}/路径图` },
+  { label: '练习题', href: `${BASE}/${subject}/练习题` },
+  { label: '案例库', href: `${BASE}/${subject}/案例库` },
 ];
 const items = sidebarItems.length ? sidebarItems : defaultItems;
 ---

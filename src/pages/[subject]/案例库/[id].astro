@@ -76,14 +76,14 @@ export async function getStaticPaths() {
 
 const { case: c } = Astro.props;
 const menuItems = [
-  { label: '科目介绍', href: '/liuyao' },
-  { label: '路径图', href: '/liuyao/路径图' },
-  { label: '练习题', href: '/liuyao/练习题' },
-  { label: '案例库', href: '/liuyao/案例库' },
+  { label: '科目介绍', href: '/xiuanyan-academy/liuyao' },
+  { label: '路径图', href: '/xiuanyan-academy/liuyao/路径图' },
+  { label: '练习题', href: '/xiuanyan-academy/liuyao/练习题' },
+  { label: '案例库', href: '/xiuanyan-academy/liuyao/案例库' },
 ];
 ---
 
-<SubjectLayout title={`六爻案例：${c.title}`} currentPath="/liuyao" sidebarItems={menuItems}>
+<SubjectLayout title={`六爻案例：${c.title}`} currentPath="/xiuanyan-academy/liuyao" sidebarItems={menuItems}>
   <div class="mb-6">
     <div class="flex items-center gap-2 flex-wrap mb-2">
       <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">{c.type}</span>
