@@ -3,6 +3,8 @@ import SubjectLayout from '../../../layouts/SubjectLayout.astro';
 import { marked } from 'marked';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { load } from 'js-yaml';
+import LiuyaoDiagram from '../../../components/LiuyaoDiagram.astro';
 
 marked.setOptions({ breaks: true, gfm: true });
 
@@ -11,22 +13,44 @@ export async function getStaticPaths() {
     const contentDir = resolve(process.cwd(), 'src/content/liuyao/案例库');
     const raw = readFileSync(resolve(contentDir, '教学案例集.md'), 'utf-8');
 
-    // Split by case headings: \n## 案例N：... (split removes the heading, block starts with "N：title")
+    // Split by case headings: \n## 案例N：...
     const allParts = raw.split('\n## 案例');
-    const caseBlocks = allParts.slice(1); // skip intro, keep only cases
+    const caseBlocks = allParts.slice(1);
 
     const cases = caseBlocks
       .map((block, idx) => {
         const id = String(idx + 1);
-        // After split, block starts with "N：title" — prepend '案例' for pattern match
         const titledBlock = '案例' + block;
         const titleMatch = titledBlock.match(/^案例[一二三四五六七八九十百千]+：(.+)$/m);
         const title = titleMatch ? titleMatch[1].trim() : `案例${id}`;
-        const fullBlock = '## ' + titledBlock;
-        const html = marked.parse(fullBlock) as string;
-        return { id, title, html };
+
+        // Extract frontmatter block if present (--- ... ---)
+        const fmMatch = titledBlock.match(/^[\s\S]*?---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+        let diagramData: Record<string, any> = {};
+        let bodyContent = titledBlock;
+
+        if (fmMatch) {
+          try {
+            const fmStr = fmMatch[1];
+            const parsed = load(fmStr) as Record<string, any>;
+            if (parsed && typeof parsed === 'object') {
+              // Extract diagram-relevant fields
+              const diagramFields = ['本卦','变卦','八宫','地支','六亲','六神','动爻','世应','变卦地支','变卦六亲','飞神','伏神','年月干支'];
+              diagramFields.forEach(f => {
+                if (parsed[f] !== undefined) {
+                  diagramData[f] = parsed[f];
+                }
+              });
+            }
+          } catch (e) {
+            console.warn('[案例] Frontmatter parse error:', e);
+          }
+          bodyContent = fmMatch[2];
+        }
+
+        const html = marked.parse('## ' + bodyContent) as string;
+        return { id, title, html, diagram: Object.keys(diagramData).length > 0 ? diagramData : null };
       })
-      // Filter out non-case blocks (e.g. "案例库使用说明")
       .filter(c => !c.title.startsWith('案例'));
 
     return cases.map(c => ({
@@ -55,6 +79,13 @@ const menuItems = [
     </div>
     <h1 class="text-2xl font-bold mb-1">{c.title}</h1>
   </div>
+
+  {/* 卦象图 */}
+  {c.diagram && (
+    <div class="mb-6">
+      <LiuyaoDiagram diagram={c.diagram} showTitle={true} />
+    </div>
+  )}
 
   <div class="prose prose-slate max-w-none">
     <div set:html={c.html} />
