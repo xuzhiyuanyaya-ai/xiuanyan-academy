@@ -1,8 +1,12 @@
 ---
 import SubjectLayout from '../../layouts/SubjectLayout.astro';
+import { marked } from 'marked';
 import { readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+// Configure marked for safe rendering
+marked.setOptions({ breaks: true, gfm: true });
 
 export async function getStaticPaths() {
   return [
@@ -27,11 +31,14 @@ const menuItems = [
   { label: '案例库', href: `/${subject}/案例库` },
 ];
 
-// Load reference note content for liuyao
+// Load reference note content for liuyao (parsed as HTML)
 function loadRef(filename: string): string {
   try {
     const base = resolve(dirname(fileURLToPath(import.meta.url)), '../../content/liuyao/references', filename);
-    return readFileSync(base, 'utf-8');
+    const raw = readFileSync(base, 'utf-8');
+    // Strip frontmatter
+    const content = raw.replace(/^---[\s\S]*?---\n/, '');
+    return marked.parse(content) as string;
   } catch {
     return '';
   }
@@ -207,13 +214,7 @@ const milestones = subject === 'liuyao' ? [
                       </summary>
                       {ref.content && (
                         <div class="px-4 py-3 text-sm border-t border-[var(--color-notion-border)] bg-[var(--color-notion-gray)] max-h-96 overflow-y-auto">
-                          <div class="prose prose-sm max-w-none" set:html={ref.content
-                            .replace(/^# .+$/m, '')
-                            .replace(/^> .+$/m, '')
-                            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                            .replace(/^#{1,6} (.+)$/gm, '<strong>$1</strong>')
-                            .replace(/\n\n/g, '<br/>')
-                          } />
+                          <div class="prose prose-sm max-w-none" set:html={ref.content} />
                         </div>
                       )}
                     </details>
