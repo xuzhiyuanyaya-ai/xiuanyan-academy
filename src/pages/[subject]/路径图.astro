@@ -2,8 +2,7 @@
 import SubjectLayout from '../../layouts/SubjectLayout.astro';
 import { marked } from 'marked';
 import { readFileSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 
 // Configure marked for safe rendering
 marked.setOptions({ breaks: true, gfm: true });
@@ -34,9 +33,8 @@ const menuItems = [
 // Load reference note content for liuyao (parsed as HTML)
 function loadRef(filename: string): string {
   try {
-    const base = resolve(dirname(fileURLToPath(import.meta.url)), '../../content/liuyao/references', filename);
+    const base = resolve(process.cwd(), 'src/content/liuyao/references', filename);
     const raw = readFileSync(base, 'utf-8');
-    // Strip frontmatter
     const content = raw.replace(/^---[\s\S]*?---\n/, '');
     return marked.parse(content) as string;
   } catch {
