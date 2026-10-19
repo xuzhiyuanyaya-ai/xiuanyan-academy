@@ -1,0 +1,80 @@
+---
+import SubjectLayout from '../../layouts/SubjectLayout.astro';
+
+export async function getStaticPaths() {
+  return [
+    { params: { subject: 'liuyao' } },
+    { params: { subject: 'bazi' } },
+    { params: { subject: 'yijing' } },
+    { params: { subject: 'qimen' } },
+    { params: { subject: 'liuren' } },
+    { params: { subject: 'fengshui' } },
+  ];
+}
+
+const { subject } = Astro.params;
+const subjectNames: Record<string, string> = {
+  liuyao: '六爻', bazi: '八字', yijing: '易经', qimen: '奇门', liuren: '六壬', fengshui: '风水',
+};
+const name = subjectNames[subject] ?? subject;
+
+const menuItems = [
+  { label: '科目介绍', href: `/${subject}` },
+  { label: '练习题', href: `/${subject}/练习题` },
+  { label: '案例库', href: `/${subject}/案例库` },
+];
+
+// Sample milestones - in production these come from content collection
+const milestones = [
+  { id: 'm1', title: '基础理论', description: '掌握五行生克、八卦象意、纳甲体系', completed: false },
+  { id: 'm2', title: '起卦方法', description: '铜钱卦、大衍筮法、时间卦等多种起卦方式', completed: false },
+  { id: 'm3', title: '用神选取', description: '根据问事选取正确的用神', completed: false },
+  { id: 'm4', title: '旺衰分析', description: '月令、日主旺衰判断是核心技能', completed: false },
+  { id: 'm5', title: '吉凶判断', description: '综合生克冲合进行最终判断', completed: false },
+];
+---
+<SubjectLayout title={`${name} - 路径图`} currentPath={`/${subject}`} sidebarItems={menuItems}>
+  <h1 class="text-2xl font-bold mb-2">{name} 路径图</h1>
+  <p class="text-[var(--color-notion-gray-text)] mb-8">学习里程碑与推荐素材</p>
+
+  <div class="relative">
+    <!-- Vertical timeline -->
+    <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-[var(--color-notion-border)]"></div>
+    <div class="space-y-8">
+      {milestones.map((m, idx) => (
+        <div class="relative pl-12" data-milestone-id={m.id}>
+          <div class={`absolute left-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 ${
+            m.completed
+              ? 'bg-[var(--color-accent)] text-white border-[var(--color-accent)]'
+              : 'bg-white text-[var(--color-notion-gray-text)] border-[var(--color-notion-border)]'
+          }`}>
+            {m.completed ? '✓' : idx + 1}
+          </div>
+          <div class={`p-4 border rounded-lg ${
+            m.completed ? 'border-[var(--color-accent)] bg-blue-50' : 'border-[var(--color-notion-border)] bg-white'
+          }`}>
+            <h3 class="font-semibold mb-1">{m.title}</h3>
+            <p class="text-sm text-[var(--color-notion-gray-text)]">{m.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <script>
+    import { getSubjectProgress, updatePathComplete } from '../../components/ProgressStore.ts';
+    const subjectId = window.location.pathname.split('/')[1] || 'liuyao';
+    try {
+      const progress = getSubjectProgress(subjectId);
+      document.querySelectorAll('[data-milestone-id]').forEach(el => {
+        const id = el.dataset.milestoneId!;
+        if (progress.completedPaths.includes(id)) {
+          el.querySelector('div:last-child')?.classList.add('border-[var(--color-accent)]', 'bg-blue-50');
+          el.querySelector('div:first-child')?.classList.add('bg-[var(--color-accent)]', 'text-white', 'border-[var(--color-accent)]');
+          const num = el.querySelector('div:first-child');
+          if (num) num.textContent = '✓';
+        }
+      });
+    } catch (e) {}
+  </script>
+</SubjectLayout>

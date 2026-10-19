@@ -1,0 +1,28 @@
+---
+interface Props {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  path: string;
+  progress?: number;
+}
+const { id, name, description, icon, path, progress = 0 } = Astro.props;
+---
+<a href={path} class="group block">
+  <div class="border border-[var(--color-notion-border)] rounded-lg p-5 bg-white hover:border-[var(--color-accent)] transition-all group-hover:shadow-sm">
+    <div class="flex items-start justify-between mb-3">
+      <div class="text-2xl">{icon}</div>
+      {progress > 0 && (
+        <span class="text-xs text-[var(--color-notion-gray-text)]">{progress}%</span>
+      )}
+    </div>
+    <h3 class="font-semibold text-[var(--color-notion-text)] mb-1">{name}</h3>
+    <p class="text-sm text-[var(--color-notion-gray-text)] leading-relaxed">{description}</p>
+    {progress > 0 && (
+      <div class="mt-3 h-1 bg-[var(--color-notion-gray)] rounded-full overflow-hidden">
+        <div class="h-full bg-[var(--color-accent)] rounded-full transition-all" style={`width: ${progress}%`}></div>
+      </div>
+    )}
+  </div>
+</a>

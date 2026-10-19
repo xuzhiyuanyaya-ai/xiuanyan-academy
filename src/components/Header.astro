@@ -1,0 +1,36 @@
+---
+interface Props {
+  currentPath?: string;
+}
+const { currentPath = '' } = Astro.props;
+
+const subjects = [
+  { id: 'liuyao', name: '六爻', path: '/liuyao' },
+  { id: 'bazi', name: '八字', path: '/bazi' },
+  { id: 'yijing', name: '易经', path: '/yijing' },
+  { id: 'qimen', name: '奇门', path: '/qimen' },
+  { id: 'liuren', name: '六壬', path: '/liuren' },
+  { id: 'fengshui', name: '风水', path: '/fengshui' },
+];
+---
+<header class="border-b border-[var(--color-notion-border)] bg-white sticky top-0 z-50">
+  <div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+    <a href="/" class="text-lg font-semibold text-[var(--color-notion-text)] hover:opacity-70 transition-opacity">
+      玄研院
+    </a>
+    <nav class="flex items-center gap-1">
+      {subjects.map(sub => (
+        <a
+          href={sub.path}
+          class={`px-3 py-1.5 rounded text-sm transition-colors ${
+            currentPath.startsWith(sub.path)
+              ? 'bg-[var(--color-notion-gray)] text-[var(--color-notion-text)] font-medium'
+              : 'text-[var(--color-notion-gray-text)] hover:bg-[var(--color-notion-gray)]'
+          }`}
+        >
+          {sub.name}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>

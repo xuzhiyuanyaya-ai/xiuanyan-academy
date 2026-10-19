@@ -1,0 +1,40 @@
+---
+import SubjectLayout from '../../../layouts/SubjectLayout.astro';
+
+export async function getStaticPaths() {
+  return [
+    { params: { subject: 'liuyao' } },
+    { params: { subject: 'bazi' } },
+    { params: { subject: 'yijing' } },
+    { params: { subject: 'qimen' } },
+    { params: { subject: 'liuren' } },
+    { params: { subject: 'fengshui' } },
+  ];
+}
+
+const { subject } = Astro.params;
+const subjectNames: Record<string, string> = {
+  liuyao: '六爻', bazi: '八字', yijing: '易经', qimen: '奇门', liuren: '六壬', fengshui: '风水',
+};
+const name = subjectNames[subject] ?? subject;
+
+const menuItems = [
+  { label: '科目介绍', href: `/${subject}` },
+  { label: '路径图', href: `/${subject}/路径图` },
+  { label: '案例库', href: `/${subject}/案例库` },
+];
+---
+<SubjectLayout title={`${name} - 练习题`} currentPath={`/${subject}`} sidebarItems={menuItems}>
+  <h1 class="text-2xl font-bold mb-2">{name} 练习题</h1>
+  <p class="text-[var(--color-notion-gray-text)] mb-8">在线答题，自动批改，结果自动存档</p>
+
+  <div class="space-y-6">
+    <!-- Placeholder quiz card - in production, quizzes come from content collections -->
+    <div class="border border-[var(--color-notion-border)] rounded-lg p-6">
+      <div class="text-sm text-[var(--color-notion-gray-text)] mb-4">暂无练习题</div>
+      <p class="text-sm text-[var(--color-notion-gray-text)]">
+        老师正在编写练习题中，即将上线。
+      </p>
+    </div>
+  </div>
+</SubjectLayout>

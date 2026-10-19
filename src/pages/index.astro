@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import SubjectCard from '../components/SubjectCard.astro';
+import ProgressBar from '../components/ProgressBar.astro';
+
+const subjects = [
+  {
+    id: 'liuyao',
+    name: '六爻',
+    icon: '☰',
+    description: '纳甲筮法，以五行生克推演世事吉凶',
+    path: '/liuyao',
+  },
+  {
+    id: 'bazi',
+    name: '八字',
+    icon: '⌚',
+    description: '四柱命理，推算人生富贵贫贱',
+    path: '/bazi',
+  },
+  {
+    id: 'yijing',
+    name: '易经',
+    icon: '☯',
+    description: '群经之始，大道之源',
+    path: '/yijing',
+  },
+  {
+    id: 'qimen',
+    name: '奇门',
+    icon: '✦',
+    description: '奇门遁甲，布局择时之学',
+    path: '/qimen',
+  },
+  {
+    id: 'liuren',
+    name: '六壬',
+    icon: '⬡',
+    description: '大六壬，神课金口诀',
+    path: '/liuren',
+  },
+  {
+    id: 'fengshui',
+    name: '风水',
+    icon: '⌇',
+    description: '地理堪舆，阴阳宅法',
+    path: '/fengshui',
+  },
+];
+---
+<BaseLayout title="首页">
+  <Header currentPath="/" />
+  <main class="max-w-5xl mx-auto px-4 py-12">
+    <!-- Hero -->
+    <div class="mb-12">
+      <h1 class="text-3xl font-bold text-[var(--color-notion-text)] mb-2">玄研院</h1>
+      <p class="text-[var(--color-notion-gray-text)]">六年六科，国学系统学习平台</p>
+    </div>
+
+    <!-- Progress Overview -->
+    <div class="mb-10 p-6 border border-[var(--color-notion-border)] rounded-lg bg-[var(--color-notion-gray)]">
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-[var(--color-notion-gray-text)] mb-4">学习进度</h2>
+      <div id="progress-overview" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {subjects.map(sub => (
+          <div class="bg-white rounded p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-medium">{sub.name}</span>
+              <span class="text-xs text-[var(--color-notion-gray-text)]" data-subject={sub.id}>0%</span>
+            </div>
+            <div class="h-1.5 bg-[var(--color-notion-gray)] rounded-full overflow-hidden">
+              <div class="h-full bg-[var(--color-accent)] rounded-full transition-all" data-bar={sub.id} style="width: 0%"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div class="mt-4 pt-4 border-t border-[var(--color-notion-border)]">
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-[var(--color-notion-gray-text)]">总进度</span>
+          <span class="text-sm font-medium" id="total-percent">0%</span>
+        </div>
+        <div class="mt-2 h-2 bg-[var(--color-notion-gray)] rounded-full overflow-hidden">
+          <div class="h-full bg-[var(--color-accent)] rounded-full transition-all" id="total-bar" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Subject Cards -->
+    <h2 class="text-sm font-semibold uppercase tracking-wide text-[var(--color-notion-gray-text)] mb-4">六科入口</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {subjects.map(sub => (
+        <SubjectCard {...sub} progress={0} />
+      ))}
+    </div>
+  </main>
+
+  <script>
+    import { getProgress } from '../components/ProgressStore.ts';
+
+    const TOTAL_PATHS = 5; // per subject, estimated
+
+    function updateProgress() {
+      try {
+        const progress = getProgress();
+        let totalPercent = 0;
+        let count = 0;
+
+        const subjectIds = ['liuyao', 'bazi', 'yijing', 'qimen', 'liuren', 'fengshui'];
+        subjectIds.forEach(id => {
+          const subProgress = progress.subjects[id];
+          const percent = subProgress
+            ? Math.round((subProgress.completedPaths.length / TOTAL_PATHS) * 100)
+            : 0;
+
+          const label = document.querySelector(`[data-subject="${id}"]`);
+          const bar = document.querySelector(`[data-bar="${id}"]`);
+          if (label) label.textContent = `${percent}%`;
+          if (bar) (bar as HTMLElement).style.width = `${percent}%`;
+
+          totalPercent += percent;
+          count++;
+        });
+
+        const avgPercent = count > 0 ? Math.round(totalPercent / count) : 0;
+        const totalLabel = document.getElementById('total-percent');
+        const totalBar = document.getElementById('total-bar');
+        if (totalLabel) totalLabel.textContent = `${avgPercent}%`;
+        if (totalBar) (totalBar as HTMLElement).style.width = `${avgPercent}%`;
+      } catch (e) {
+        // localStorage not available
+      }
+    }
+
+    updateProgress();
+  </script>
+</BaseLayout>

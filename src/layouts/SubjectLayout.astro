@@ -1,0 +1,43 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header.astro';
+
+interface Props {
+  title: string;
+  currentPath: string;
+  sidebarItems?: Array<{ label: string; href: string }>;
+}
+const { title, currentPath, sidebarItems = [] } = Astro.props;
+
+const defaultItems = [
+  { label: '科目介绍', href: `#intro` },
+  { label: '路径图', href: `/liuyao/路径图` },
+  { label: '练习题', href: `/liuyao/练习题` },
+  { label: '案例库', href: `/liuyao/案例库` },
+];
+const items = sidebarItems.length ? sidebarItems : defaultItems;
+---
+<BaseLayout title={title}>
+  <Header currentPath={currentPath} />
+  <div class="max-w-5xl mx-auto px-4 py-8">
+    <div class="flex gap-8">
+      <!-- Sidebar -->
+      <aside class="hidden md:block w-48 flex-shrink-0">
+        <nav class="sticky top-20 space-y-1">
+          {items.map(item => (
+            <a
+              href={item.href}
+              class="block px-3 py-1.5 text-sm rounded text-[var(--color-notion-gray-text)] hover:bg-[var(--color-notion-gray)] hover:text-[var(--color-notion-text)] transition-colors"
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+      </aside>
+      <!-- Content -->
+      <main class="flex-1 min-w-0">
+        <slot />
+      </main>
+    </div>
+  </div>
+</BaseLayout>
