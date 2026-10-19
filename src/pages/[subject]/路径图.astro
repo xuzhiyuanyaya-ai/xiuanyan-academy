@@ -1,5 +1,8 @@
 ---
 import SubjectLayout from '../../layouts/SubjectLayout.astro';
+import { readFileSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 export async function getStaticPaths() {
   return [
@@ -24,104 +27,200 @@ const menuItems = [
   { label: '案例库', href: `/${subject}/案例库` },
 ];
 
-// 六爻 real milestones (from 京房学习路径图)
-const liuyaoMilestones = [
+// Load reference note content for liuyao
+function loadRef(filename: string): string {
+  try {
+    const base = resolve(dirname(fileURLToPath(import.meta.url)), '../../content/liuyao/references', filename);
+    return readFileSync(base, 'utf-8');
+  } catch {
+    return '';
+  }
+}
+
+const refNotes = {
+  '世应关系': loadRef('京房_六爻_36-六爻世应关系精义.md'),
+  '六亲通变': loadRef('六亲通变笔记.md'),
+};
+
+// Real 8 milestones for liuyao derived from 六爻学习路径图.md
+const milestones = subject === 'liuyao' ? [
   {
     id: 'm1',
     title: '① 装卦',
-    description: '掌握月日干支、纳甲、世应、六亲、六神、动变完整装卦流程。背诵纳甲口诀，八宫卦世应位置歌诀。',
-    checkpoint: '5分钟内完成任意陌生卦象的完整装卦',
-    reference: '《六爻基础概念》·《断卦流程学习》',
+    description: '掌握五行生克、八卦象意、纳甲体系——将铜钱摇出的六个爻按规则配上干支、六亲、六神、世应，形成完整卦盘',
+    completed: false,
+    checkpoints: [
+      '能将任意六爻卦完整排出：月日干支 → 卦象 → 纳甲 → 定世应 → 安六亲 → 配六神 → 标动爻 → 排变卦',
+      '背诵纳甲口诀：乾宫六爻纳甲戊，上世五爻午火属',
+      '能在5分钟内完成一个陌生卦象的完整装卦',
+    ],
+    references: [
+      { label: '📖 六爻世应关系精义', content: refNotes['世应关系'] },
+      { label: '📖 六亲通变笔记', content: refNotes['六亲通变'] },
+    ],
   },
   {
     id: 'm2',
     title: '② 世应定位',
-    description: '理解世爻（问事者）、应爻（对方/环境/结果）的定义。掌握八宫卦世应歌诀，分析世应之间六种基本关系。',
-    checkpoint: '准确标注任意卦世应位置与五行生克关系',
-    reference: '《世应体系》·《世应生克与用神取法》',
+    description: '世爻代表问事者本人（"我"），应爻代表对方、环境、结果（"他"）——世应关系是六爻分析人事的骨架',
+    completed: false,
+    checkpoints: [
+      '能说出世爻与应爻的基本定义与代表含义',
+      '能背诵世应位置歌诀',
+      '能判断世应之间的六种基本关系：相生、相克、比和、相冲、相合、相刑',
+    ],
+    references: [
+      { label: '📖 六爻世应关系精义', content: refNotes['世应关系'] },
+    ],
   },
   {
     id: 'm3',
     title: '③ 六亲配置',
-    description: '掌握父母、兄弟、子孙、妻财、官鬼五大六亲的生克循环与象意。给定日干推导任意地支六亲属性。',
-    checkpoint: '给定日干能推导任意地支的六亲属性',
-    reference: '《六亲详解》·《六亲占事》',
+    description: '六亲是以日干为"我"，通过五行生克关系推导出的父母、兄弟、子孙、妻财、官鬼五大类别——六亲是六爻论事的"词汇表"',
+    completed: false,
+    checkpoints: [
+      '能背诵六亲五行本源歌：木生火是父母，木比木是兄弟……',
+      '能准确说出五种六亲的正面类象与负面类象',
+      '能绘制六亲生克循环图',
+    ],
+    references: [
+      { label: '📖 六亲通变笔记', content: refNotes['六亲通变'] },
+    ],
   },
   {
     id: 'm4',
     title: '④ 六神配置',
-    description: '背诵日干配六神歌诀（甲乙日主起青龙……）。掌握六神类象与六亲×六神联合分析原则。',
-    checkpoint: '能绘制六神速查表并进行六亲×六神联合断卦',
-    reference: '《六神体系》',
+    description: '六神（青龙、朱雀、勾陈、螣蛇、白虎、玄武）是以日干为基准循环配入六爻的辅助信息，为六亲"染色"',
+    completed: false,
+    checkpoints: [
+      '能背诵日干配六神歌：甲乙日主起青龙，丙丁日起朱雀从……',
+      '能准确说出六神的正面与负面类象',
+      '能说明六神与六亲联合分析的基本原则',
+    ],
+    references: [],
   },
   {
     id: 'm5',
     title: '⑤ 旺衰判断',
-    description: '月令定旺衰是六爻核心技术。掌握月令五行旺衰表、十二长生诀、日辰加持规则，综合判断用神强弱。',
-    checkpoint: '能综合月令+日辰+动变判断用神最终旺衰',
-    reference: '《太岁与月破》·《旺衰判断专项练习（15题）》',
+    description: '判断某一爻在月令、日辰加持下的旺、相、休、囚、死状态——旺衰直接决定吉凶',
+    completed: false,
+    checkpoints: [
+      '能背诵月令五行旺衰表：木旺在春、火旺在夏、金旺在秋、水旺在冬、土旺在四季末',
+      '能准确判断任意地支在任意月令下的十二长生状态',
+      '能综合月令+日辰+动变，判断用神的最终旺衰',
+    ],
+    references: [],
   },
   {
     id: 'm6',
     title: '⑥ 用神选取',
-    description: '用神是所问之事对应的六亲爻。掌握六亲取用歌诀、常见占事用神速查表，处理用神不现（借伏神）和两现情况。',
-    checkpoint: '面对陌生占问能在30秒内确定用神',
-    reference: '《六亲占事》·《世应生克与用神取法》',
+    description: '用神是所问之事对应的六亲爻——选对了用神，判断才有根基；选错了，一切皆错',
+    completed: false,
+    checkpoints: [
+      '能背诵六亲取用歌',
+      '能准确说出常见占事（求财、婚姻、疾病、官运、出行）的用神选取规则',
+      '能处理"用神不现"的情况',
+    ],
+    references: [],
   },
   {
     id: 'm7',
     title: '⑦ 动变分析',
-    description: '动爻是事物变化焦点。分析独发/多动之卦，判断变爻回头生克、化进化退，处理伏神飞神关系。',
-    checkpoint: '能完整分析动变链条并判断事态发展方向',
-    reference: '《动变法则》·《进神退神与化进化退》',
+    description: '动爻是六爻的心脏——通过分析动爻的生克、回头生克、化进化退，判断事情发展方向与结果',
+    completed: false,
+    checkpoints: [
+      '能准确识别动爻（老阳○、老阴×）与静爻',
+      '能分析独发之卦与多动之卦的断法差异',
+      '能判断变爻对动爻的回头生克',
+    ],
+    references: [],
   },
   {
     id: 'm8',
     title: '⑧ 独立断卦',
-    description: '独立完成：取用神→观世应→判旺衰→看动变→参六神→定吉凶→推应期 全流程，面对真实占问给出清晰判断。',
-    checkpoint: '独立完成真实占问全流程并事后验证',
-    reference: '《占验案例分析》·《教学案例库（8案例）》',
+    description: '面对真实占问，能独立完成：取用神→观世应→判旺衰→看动变→参六神→定吉凶→推应期 完整流程',
+    completed: false,
+    checkpoints: [
+      '面对陌生占问，能在3分钟内完成完整断卦流程，不查资料独立完成',
+      '能给出清晰的吉凶判断',
+      '能推算出合理的应期',
+    ],
+    references: [],
   },
+] : [
+  { id: 'm1', title: '基础理论', description: '掌握核心概念', completed: false, checkpoints: [], references: [] },
+  { id: 'm2', title: '进阶应用', description: '深化理解', completed: false, checkpoints: [], references: [] },
+  { id: 'm3', title: '实战练习', description: '案例分析', completed: false, checkpoints: [], references: [] },
 ];
-
-// Placeholder milestones for other subjects
-const placeholderMilestones = [
-  { id: 'p1', title: '① 基础理论', description: '掌握本学科核心概念与基础框架', checkpoint: '完成基础概念学习', reference: '' },
-  { id: 'p2', title: '② 进阶技能', description: '深入理解本学科核心技能与方法', checkpoint: '完成进阶内容学习', reference: '' },
-  { id: 'p3', title: '③ 实战应用', description: '在真实场景中应用所学，独立分析', checkpoint: '完成实战练习', reference: '' },
-];
-
-const milestones = subject === 'liuyao' ? liuyaoMilestones : placeholderMilestones;
 ---
 
 <SubjectLayout title={`${name} - 路径图`} currentPath={`/${subject}`} sidebarItems={menuItems}>
   <h1 class="text-2xl font-bold mb-2">{name} 学习路径图</h1>
-  <p class="text-[var(--color-notion-gray-text)] mb-2">
-    {subject === 'liuyao'
-      ? '六爻从"会装卦"到"会断卦"完整里程碑，共 8 个核心节点'
-      : '本学科学习里程碑，持续更新中'}
-  </p>
-  {subject === 'liuyao' && (
-    <p class="text-xs text-[var(--color-notion-gray-text)] mb-8">
-      制定：2026-10-19　来源：京房六爻学习路径图
-    </p>
-  )}
+  <p class="text-[var(--color-notion-gray-text)] mb-8">8个核心里程碑，从"会装卦"到"会断卦"· 点击展开查看参考资料原文</p>
 
   <div class="relative">
+    <!-- Vertical timeline -->
     <div class="absolute left-4 top-0 bottom-0 w-0.5 bg-[var(--color-notion-border)]"></div>
-    <div class="space-y-8">
+    <div class="space-y-6">
       {milestones.map((m, idx) => (
         <div class="relative pl-12" data-milestone-id={m.id}>
-          <div class="milestone-dot absolute left-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 bg-white text-[var(--color-notion-gray-text)] border-[var(--color-notion-border)]">
-            {idx + 1}
+          <div class={`absolute left-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 ${
+            m.completed
+              ? 'bg-[var(--color-accent)] text-white border-[var(--color-accent)]'
+              : 'bg-white text-[var(--color-notion-gray-text)] border-[var(--color-notion-border)]'
+          }`}>
+            {m.completed ? '✓' : idx + 1}
           </div>
-          <div class="milestone-card p-4 border border-[var(--color-notion-border)] rounded-lg bg-white hover:border-[var(--color-accent)] transition-all">
-            <h3 class="font-semibold mb-1">{m.title}</h3>
-            <p class="text-sm text-[var(--color-notion-gray-text)] mb-2">{m.description}</p>
-            <div class="flex flex-wrap gap-2 text-xs">
-              <span class="px-2 py-0.5 bg-green-50 text-green-700 rounded">过关标准：{m.checkpoint}</span>
-              {m.reference && <span class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded">参考：{m.reference}</span>}
-            </div>
+
+          <!-- Milestone card -->
+          <div class={`p-5 border rounded-lg ${
+            m.completed ? 'border-[var(--color-accent)] bg-blue-50' : 'border-[var(--color-notion-border)] bg-white'
+          }`}>
+            <h3 class="font-semibold text-base mb-1">{m.title}</h3>
+            <p class="text-sm text-[var(--color-notion-gray-text)] mb-3">{m.description}</p>
+
+            <!-- Checkpoints -->
+            {m.checkpoints.length > 0 && (
+              <div class="mb-3">
+                <p class="text-xs font-medium text-[var(--color-notion-gray-text)] mb-1.5">过关标准</p>
+                <ul class="space-y-1">
+                  {m.checkpoints.map((cp: string) => (
+                    <li class="flex items-start gap-2 text-sm text-[var(--color-notion-text)]">
+                      <span class="text-[var(--color-accent)] mt-0.5">✓</span>
+                      <span>{cp}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <!-- Reference notes — collapsible inline content -->
+            {m.references.length > 0 && (
+              <div class="mt-3 border-t border-[var(--color-notion-border)] pt-3">
+                <p class="text-xs font-medium text-[var(--color-notion-gray-text)] mb-2">参考资料（点击展开）</p>
+                <div class="space-y-2">
+                  {m.references.map((ref: { label: string; content: string }) => (
+                    <details class="group rounded border border-[var(--color-notion-border)] overflow-hidden">
+                      <summary class="flex items-center gap-2 px-3 py-2 cursor-pointer text-sm font-medium text-[var(--color-notion-text)] hover:bg-[var(--color-notion-gray)] transition-colors list-none">
+                        <span class="text-[var(--color-accent)] transition-transform group-open:rotate-90">▶</span>
+                        <span>{ref.label}</span>
+                      </summary>
+                      {ref.content && (
+                        <div class="px-4 py-3 text-sm border-t border-[var(--color-notion-border)] bg-[var(--color-notion-gray)] max-h-96 overflow-y-auto">
+                          <div class="prose prose-sm max-w-none" set:html={ref.content
+                            .replace(/^# .+$/m, '')
+                            .replace(/^> .+$/m, '')
+                            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                            .replace(/^#{1,6} (.+)$/gm, '<strong>$1</strong>')
+                            .replace(/\n\n/g, '<br/>')
+                          } />
+                        </div>
+                      )}
+                    </details>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       ))}
@@ -135,12 +234,14 @@ const milestones = subject === 'liuyao' ? liuyaoMilestones : placeholderMileston
       const progress = getSubjectProgress(subjectId);
       document.querySelectorAll('[data-milestone-id]').forEach(el => {
         const id = el.dataset.milestoneId!;
-        const dot = el.querySelector('.milestone-dot');
-        const card = el.querySelector('.milestone-card') as HTMLElement;
-        if (progress.completedPaths.includes(id)) {
-          dot?.classList.add('bg-[var(--color-accent)]', 'text-white', 'border-[var(--color-accent)]');
-          dot!.textContent = '✓';
-          card?.classList.add('border-[var(--color-accent)]', 'bg-blue-50');
+        if (progress.completedPaths?.includes(id)) {
+          const card = el.querySelector('div:last-child') as HTMLElement;
+          if (card) card.classList.add('border-[var(--color-accent)]', 'bg-blue-50');
+          const circle = el.querySelector('div:first-child') as HTMLElement;
+          if (circle) {
+            circle.classList.add('bg-[var(--color-accent)]', 'text-white', 'border-[var(--color-accent)]');
+            circle.textContent = '✓';
+          }
         }
       });
     } catch (e) {}
