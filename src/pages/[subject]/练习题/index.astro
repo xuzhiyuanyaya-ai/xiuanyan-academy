@@ -23,18 +23,94 @@ const menuItems = [
   { label: '路径图', href: `/${subject}/路径图` },
   { label: '案例库', href: `/${subject}/案例库` },
 ];
+
+// 六爻 practice modules
+const liuyaoQuizzes = [
+  {
+    id: 'wangshuai',
+    title: '旺衰判断专项练习',
+    desc: '15 道练习题，含简单/中等/困难三个难度梯度，综合训练月令定旺衰、日辰加持、动变分析能力',
+    difficulty: '入门→进阶',
+    count: '15题',
+    badge: '核心技能',
+  },
+];
 ---
+
 <SubjectLayout title={`${name} - 练习题`} currentPath={`/${subject}`} sidebarItems={menuItems}>
   <h1 class="text-2xl font-bold mb-2">{name} 练习题</h1>
-  <p class="text-[var(--color-notion-gray-text)] mb-8">在线答题，自动批改，结果自动存档</p>
+  <p class="text-[var(--color-notion-gray-text)] mb-8">
+    {subject === 'liuyao' ? '在线答题，自动批改，结果自动存档至本地进度系统' : '持续更新中'}
+  </p>
 
-  <div class="space-y-6">
-    <!-- Placeholder quiz card - in production, quizzes come from content collections -->
-    <div class="border border-[var(--color-notion-border)] rounded-lg p-6">
-      <div class="text-sm text-[var(--color-notion-gray-text)] mb-4">暂无练习题</div>
-      <p class="text-sm text-[var(--color-notion-gray-text)]">
-        老师正在编写练习题中，即将上线。
-      </p>
+  {subject === 'liuyao' ? (
+    <div class="space-y-6">
+      {liuyaoQuizzes.map(quiz => (
+        <div class="border border-[var(--color-notion-border)] rounded-lg p-6 hover:border-[var(--color-accent)] transition-all">
+          <div class="flex items-start gap-3 mb-4">
+            <div class="text-2xl">📝</div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <h3 class="font-semibold">{quiz.title}</h3>
+                <span class="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded">{quiz.badge}</span>
+                <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">{quiz.difficulty}</span>
+              </div>
+              <p class="text-sm text-[var(--color-notion-gray-text)]">{quiz.desc}</p>
+              <p class="text-xs text-[var(--color-notion-gray-text)] mt-1">共 {quiz.count}</p>
+            </div>
+          </div>
+          <div class="prose prose-sm max-w-none text-[var(--color-notion-text)]">
+            <p class="text-sm text-[var(--color-notion-gray-text)] italic">
+              练习内容正在加载中，请参考下方知识点预览...
+            </p>
+          </div>
+          <div class="mt-4 flex gap-3">
+            <a
+              href={`/${subject}/练习题/旺衰判断专项练习`}
+              class="px-4 py-2 bg-[var(--color-accent)] text-white text-sm rounded-lg hover:opacity-90 transition-opacity"
+            >
+              开始练习 →
+            </a>
+          </div>
+        </div>
+      ))}
+
+      <!-- 旺衰判断专项练习 inline preview -->
+      <div class="border border-[var(--color-notion-border)] rounded-lg p-6">
+        <h3 class="font-semibold mb-4 flex items-center gap-2">
+          <span>📊</span> 旺衰判断专项练习 · 知识点速览
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div class="p-3 bg-gray-50 rounded">
+            <div class="font-medium mb-1">月令定旺衰</div>
+            <p class="text-xs text-[var(--color-notion-gray-text)]">木旺春、火旺夏、金旺秋、水旺冬、土旺四季末</p>
+          </div>
+          <div class="p-3 bg-gray-50 rounded">
+            <div class="font-medium mb-1">日辰权重</div>
+            <p class="text-xs text-[var(--color-notion-gray-text)]">"日建为王，月令为将"——日辰权重通常大于月令</p>
+          </div>
+          <div class="p-3 bg-gray-50 rounded">
+            <div class="font-medium mb-1">动变优先</div>
+            <p class="text-xs text-[var(--color-notion-gray-text)]">"动变为先"——回头生克优先于月令日辰</p>
+          </div>
+          <div class="p-3 bg-gray-50 rounded">
+            <div class="font-medium mb-1">判断顺序</div>
+            <p class="text-xs text-[var(--color-notion-gray-text)]">月令→日辰→动变，三者合力定最终旺衰</p>
+          </div>
+        </div>
+        <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded text-xs">
+          <strong>难度梯度说明：</strong>第 1-5 题（简单）考月令单因素；第 6-10 题（中等）加入日辰/动变；第 11-15 题（困难）综合三层因素并含世爻关系判断。
+        </div>
+      </div>
     </div>
-  </div>
+  ) : (
+    <div class="space-y-6">
+      <div class="border border-[var(--color-notion-border)] rounded-lg p-6">
+        <div class="text-sm text-[var(--color-notion-gray-text)] mb-4">🚧 正在编写</div>
+        <p class="text-sm text-[var(--color-notion-gray-text)]">
+          {name}练习题正在由老师编写中，即将上线。
+        </p>
+      </div>
+    </div>
+  )}
 </SubjectLayout>

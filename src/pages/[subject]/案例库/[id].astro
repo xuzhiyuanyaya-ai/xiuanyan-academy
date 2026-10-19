@@ -1,0 +1,123 @@
+---
+import SubjectLayout from '../../../layouts/SubjectLayout.astro';
+
+export async function getStaticPaths() {
+  const cases = [
+    { id: '1', type: '求财', title: '占求财——妻财持世，卦理清晰', source: '《增删卜易》', jixiong: '吉', process: [
+      { step: '第一步：取用神', content: '占求财，以妻财爻为用神。本卦中妻财亥水现于四爻。' },
+      { step: '第二步：观世应', content: '世爻：兄弟酉金；应爻：官鬼卯木。' },
+      { step: '第三步：世应生克分析', content: '世爻酉金克应爻卯木——金克木，世克应；我方得势，主求财可成。' },
+      { step: '第四步：用神旺衰分析', content: '妻财亥水当午月——亥水在午月为死地——妻财休囚；但妻财亥水与世爻酉金——金生水，世爻生妻财；世生用神，吉。' },
+      { step: '第五步：动变分析', content: '本卦无独发之爻，六爻安静，以静卦论断。' },
+    ], conclusion: '世克应，我方得势；世生用神，求财必得。妻财虽月令死，但世爻生之，仍为有根之财。', key: '世克应 + 世生用神', verify: '得财。' },
+
+    { id: '2', type: '官运', title: '占官运——用神持世', source: '《卜筮全书》', jixiong: '吉', process: [
+      { step: '第一步：取用神', content: '占官运，以官鬼爻为用神。官鬼午火现于三爻。' },
+      { step: '第二步：观世应', content: '世爻：官鬼午火（用神持世）；应爻：子孙子水。' },
+      { step: '第三步：世应生克分析', content: '世爻午火克应爻子水——火克水，世克应；我方得势，主官运可成。' },
+      { step: '第四步：用神旺衰分析', content: '官鬼午火当戌月——戌月土旺，火入墓——官星入墓；但官鬼午火持世——我方有官，虽入墓但根基稳固。' },
+      { step: '第五步：动变分析', content: '应爻子孙子水动化父母巳火——化回头克；子孙子水被巳火所泄——子孙受制。' },
+      { step: '第六步：综合判断', content: '世克应，我方得势；用神持世，虽入墓亦可成；应爻化回头克，子孙受制，升迁可成。' },
+    ], conclusion: '世克应，用神持世，虽入墓亦可成；应爻化回头克，子孙受制，升迁可成。', key: '用神持世 + 动化回头克', verify: '升迁。' },
+
+    { id: '3', type: '婚嫁', title: '占婚嫁——卦变伏吟', source: '《卜筮全书》', jixiong: '平（终成）', process: [
+      { step: '第一步：取用神', content: '女占婚，以官鬼爻为用神。官鬼巳火现于六爻。' },
+      { step: '第二步：观世应', content: '世爻：妻财卯木；应爻：官鬼巳火。' },
+      { step: '第三步：世应生克分析', content: '世爻卯木生应爻巳火——木生火，世生应；我方耗气以合对方，主我方主动。' },
+      { step: '第四步：用神旺衰分析', content: '官鬼巳火当酉月——金旺于酉，火受克——官星休囚；官鬼巳火与日辰巳——比和——得日辰之助。' },
+      { step: '第五步：卦变分析', content: '卦变伏吟——主事缠绵、反复、不顺。' },
+      { step: '第六步：综合判断', content: '世生应，我方主动；官星得日辰之助，婚姻可成；然卦变伏吟，过程稍有波折。' },
+    ], conclusion: '世生应，我方主动；官星得日辰之助，婚姻可成；然卦变伏吟，过程稍有波折。', key: '世生应 + 卦变伏吟', verify: '婚成，但过程有波折。' },
+
+    { id: '4', type: '疾病', title: '占疾病——用神极衰', source: '《增删卜易》', jixiong: '凶', process: [
+      { step: '第一步：取用神', content: '占父病，以父母爻为用神。父母申金现于三爻。' },
+      { step: '第二步：观动爻', content: '世爻兄弟子水、父母申金皆动。' },
+      { step: '第三步：用神旺衰分析', content: '父母申金当寅月——金绝于寅——父母休囚；父母申金动化妻财亥水——父母化妻财（泄气）；妻财亥水回头生父母申金——金生水，父母泄气；卦中子孙寅木当寅月旺——子孙克父母。' },
+      { step: '第四步：生死之判', content: '父母申金月令休囚（寅月金绝）；动化妻财亥水——化泄气，主生机已去；子孙寅木当月建旺——子孙克父母。' },
+      { step: '第五步：世应分析', content: '世爻兄弟子水动化兄弟子水（伏吟）——内心焦灼。' },
+    ], conclusion: '父母休囚化妻财，子孙旺动克之，此病难救。', key: '用神化泄气 + 忌神旺克', verify: '果然不救。' },
+
+    { id: '5', type: '出行', title: '占出行——世应相冲', source: '《卜筮正宗》', jixiong: '平（慎行）', process: [
+      { step: '第一步：取用神', content: '占出行，以世爻为用神。世爻妻财卯木。' },
+      { step: '第二步：观动爻', content: '父母丑土、官鬼巳火皆动。' },
+      { step: '第三步：世应生克分析', content: '世爻妻财卯木当卯月——木旺于卯——世爻极旺；应爻兄弟酉金与世爻卯木——卯酉冲——世应相冲；世应相冲，所往之处有争。' },
+      { step: '第四步：用神旺衰分析', content: '世爻妻财卯木当令极旺——我有底气；但世应相冲——矛盾冲突。' },
+      { step: '第五步：动变分析', content: '官鬼巳火动化妻财子水——子水泄巳火之气；父母丑土动化妻财寅木——文书化财。' },
+      { step: '第六步：综合判断', content: '世应相冲，所往有争；世爻虽旺，亦宜慎行。' },
+    ], conclusion: '世应相冲，所往有争；世爻虽旺，亦宜慎行。', key: '世应相冲', verify: '出行果有争执。' },
+
+    { id: '6', type: '合伙', title: '占合伙——兄弟爻两动', source: '《卜筮正宗》', jixiong: '凶', process: [
+      { step: '第一步：取用神', content: '合伙求财，以妻财爻为用神。妻财子水现于二爻。' },
+      { step: '第二步：观动爻', content: '子孙申金、父母午火皆动。' },
+      { step: '第三步：用神旺衰分析', content: '妻财子水当未月——土旺于未，水受克——妻财休囚。' },
+      { step: '第四步：动变分析', content: '子孙申金动化父母午火——子孙化父母；父母午火动化兄弟辰土——父母化兄弟（兄弟劫财）；卦中两兄弟爻动——劫财之兆。' },
+      { step: '第五步：世应分析', content: '应爻兄弟戌土——对方为兄弟（朋友）。' },
+      { step: '第六步：综合判断', content: '卦中两兄弟发动，且父母化兄弟；合伙求财必被朋友分利或欺骗。' },
+    ], conclusion: '卦中两兄弟发动，且父母化兄弟，合伙求财必被朋友分利或欺骗。', key: '两兄弟发动 + 父母化兄弟', verify: '合伙不成，友人骗财。' },
+
+    { id: '7', type: '借款', title: '实测占——借款能否要回', source: '京房实测（2026-10-04）', jixiong: '平（先难后易）', process: [
+      { step: '第一步：取用神', content: '占债，以妻财爻为用神。妻财爻伏于五爻之下（伏神）。' },
+      { step: '第二步：找伏神', content: '用神妻财子水伏于五爻，飞神为未土（兄弟爻）；飞神未土克伏神子水——飞克伏，凶。' },
+      { step: '第三步：用神旺衰分析', content: '妻财子水在酉月——金生水，水有气——得月令生；日辰亥水与用神子水比和——得日辰助；但飞神未土克伏神——用神受制。' },
+      { step: '第四步：动变分析', content: '三爻兄弟丑土动化父母辰土——化进神但化破；四爻子孙酉金（世）动化兄弟丑土——回头生但化墓；忌神发动（三爻），元神也动（四爻）。' },
+      { step: '第五步：通关判断', content: '忌神三爻丑土克用神子水；通关神=金，卦中四爻酉金得用且旺——通关成功。' },
+      { step: '第六步：综合判断', content: '用神月令相、日辰比和、不空——金额分量足；但飞克伏——被死死压住；应爻父母巳火囚墓破三叠——对方真拿不出；忌神有动意但化破——拖延势头无落实。' },
+    ], conclusion: '本月成事：-5分（平·勉强，本月难下月易）；下月成事：+8分（戌月未土受冲）。性质：先难后易，宜缓不宜催。关键：应爻囚墓破三叠=对方真拿不出。', key: '飞克伏 + 通关', verify: '待验（10月5日子日、10月6日丑日）' },
+
+    { id: '8', type: '销售', title: '实测占——店铺运营', source: '京房实测（2026-10-08）', jixiong: '吉', process: [
+      { step: '第一步：取用神', content: '占店铺销售，以妻财爻为用神。' },
+      { step: '第二步：判断用神旺衰', content: '妻财爻在酉月得令，旺相；日辰配合，生助妻财爻。' },
+      { step: '第三步：通关判断', content: '忌神兄弟爻克用神妻财爻；通关神为子孙爻——子孙爻旺，通关成功，财路畅通。' },
+      { step: '第四步：动变分析', content: '妻财爻动化进神——销售有增长之势。' },
+    ], conclusion: '销售额吉，有增长。店铺运营当日销售情况良好。', key: '旺衰通关 + 动化进神', verify: '待续缘回填验证结果' },
+  ];
+  return cases.map(c => ({ params: { subject: 'liuyao', id: c.id }, props: { case: c } }));
+}
+
+const { case: c } = Astro.props;
+const menuItems = [
+  { label: '科目介绍', href: '/liuyao' },
+  { label: '路径图', href: '/liuyao/路径图' },
+  { label: '练习题', href: '/liuyao/练习题' },
+  { label: '案例库', href: '/liuyao/案例库' },
+];
+---
+
+<SubjectLayout title={`六爻案例：${c.title}`} currentPath="/liuyao" sidebarItems={menuItems}>
+  <div class="mb-6">
+    <div class="flex items-center gap-2 flex-wrap mb-2">
+      <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">{c.type}</span>
+      <span class={`text-xs px-2 py-0.5 rounded ${c.jixiong === '吉' ? 'bg-green-100 text-green-700' : c.jixiong === '凶' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>
+        {c.jixiong}
+      </span>
+    </div>
+    <h1 class="text-2xl font-bold mb-1">{c.title}</h1>
+    <p class="text-sm text-[var(--color-notion-gray-text)]">来源：{c.source}</p>
+  </div>
+
+  <div class="space-y-4">
+    <div class="p-4 bg-[var(--color-notion-gray)] rounded-lg text-sm text-[var(--color-notion-gray-text)]">
+      📌 <strong>核心判断：</strong>{c.key}
+    </div>
+
+    <h2 class="font-semibold text-lg mt-6 mb-3">分析过程</h2>
+    <div class="space-y-3">
+      {c.process.map(p => (
+        <div class="border border-[var(--color-notion-border)] rounded-lg p-4">
+          <div class="font-medium mb-2 text-sm">{p.step}</div>
+          <p class="text-sm text-[var(--color-notion-gray-text)] leading-relaxed">{p.content}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+      <h3 class="font-semibold text-green-800 mb-2">✓ 结论</h3>
+      <p class="text-sm text-green-700">{c.conclusion}</p>
+    </div>
+
+    <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+      <h3 class="font-semibold text-blue-800 mb-2">✓ 事后验证</h3>
+      <p class="text-sm text-blue-700">{c.verify}</p>
+    </div>
+  </div>
+</SubjectLayout>

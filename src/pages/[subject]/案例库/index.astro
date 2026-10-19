@@ -23,17 +23,75 @@ const menuItems = [
   { label: '路径图', href: `/${subject}/路径图` },
   { label: '练习题', href: `/${subject}/练习题` },
 ];
+
+const cases = [
+  { id: 1, type: '求财', title: '占求财——妻财持世，卦理清晰', source: '《增删卜易》', jixiong: '吉', key: '世克应 + 世生用神', difficulty: '★★☆' },
+  { id: 2, type: '官运', title: '占官运——用神持世，官星入墓', source: '《卜筮全书》', jixiong: '吉', key: '用神持世 + 应爻化回头克', difficulty: '★★★' },
+  { id: 3, type: '婚嫁', title: '占婚嫁——世应相生，卦变伏吟', source: '《卜筮全书》', jixiong: '平（终成）', key: '世生应 + 卦变伏吟', difficulty: '★★★' },
+  { id: 4, type: '疾病', title: '占疾病——用神极衰，生克链条清晰', source: '《增删卜易》', jixiong: '凶', key: '用神化泄气 + 忌神旺克', difficulty: '★★★' },
+  { id: 5, type: '出行', title: '占出行——世应相冲，所往有争', source: '《卜筮正宗》', jixiong: '平（慎行）', key: '世应相冲', difficulty: '★★☆' },
+  { id: 6, type: '合伙', title: '占合伙——兄弟爻两动，必被分利', source: '《卜筮正宗》', jixiong: '凶', key: '两兄弟发动 + 父母化兄弟', difficulty: '★★★' },
+  { id: 7, type: '借款', title: '实测占——借款能否要回（待验卦）', source: '京房实测', jixiong: '平（先难后易）', key: '飞克伏 + 通关', difficulty: '★★★' },
+  { id: 8, type: '销售', title: '实测占——店铺运营（旺衰通关）', source: '京房实测', jixiong: '吉', key: '旺衰通关 + 动化进神', difficulty: '★★☆' },
+];
 ---
+
 <SubjectLayout title={`${name} - 案例库`} currentPath={`/${subject}`} sidebarItems={menuItems}>
   <h1 class="text-2xl font-bold mb-2">{name} 案例库</h1>
-  <p class="text-[var(--color-notion-gray-text)] mb-8">教学案例与详细解析</p>
+  <p class="text-[var(--color-notion-gray-text)] mb-6">
+    {subject === 'liuyao' ? '精选 8 个经典卦例，来源：《增删卜易》《卜筮全书》《卜筮正宗》《易冒》及京房实测' : '持续更新中'}
+  </p>
 
-  <div class="space-y-4">
+  {subject === 'liuyao' ? (
+    <div class="space-y-4">
+      {cases.map(c => (
+        <div class="border border-[var(--color-notion-border)] rounded-lg p-5 hover:border-[var(--color-accent)] transition-all">
+          <div class="flex items-start gap-3">
+            <div class="text-2xl shrink-0">
+              {c.type === '求财' ? '💰' : c.type === '官运' ? '🏛️' : c.type === '婚嫁' ? '💍' : c.type === '疾病' ? '🏥' : c.type === '出行' ? '✈️' : c.type === '合伙' ? '🤝' : c.type === '借款' ? '📋' : '📈'}
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 flex-wrap mb-1">
+                <span class="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">{c.type}</span>
+                <span class={`text-xs px-2 py-0.5 rounded ${c.jixiong === '吉' ? 'bg-green-100 text-green-700' : c.jixiong === '凶' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                  {c.jixiong}
+                </span>
+                <span class="text-xs text-[var(--color-notion-gray-text)]">{c.difficulty}</span>
+              </div>
+              <h3 class="font-semibold mb-1">{c.title}</h3>
+              <p class="text-xs text-[var(--color-notion-gray-text)]">来源：{c.source}　核心：{c.key}</p>
+            </div>
+            <a
+              href={`/${subject}/案例库/${c.id}`}
+              class="shrink-0 px-3 py-1.5 text-sm border border-[var(--color-notion-border)] rounded-lg hover:border-[var(--color-accent)] transition-all"
+            >
+              查看 →
+            </a>
+          </div>
+        </div>
+      ))}
+
+      <!-- 学习说明 -->
+      <div class="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <h3 class="font-semibold mb-3 text-sm">📚 案例库使用说明</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <div class="p-2 bg-white rounded">
+            <div class="font-medium mb-1">推荐学习顺序</div>
+            <p class="text-[var(--color-notion-gray-text)]">每学完一个里程碑，选择对应案例练习。先自己分析，再对照案例过程。</p>
+          </div>
+          <div class="p-2 bg-white rounded">
+            <div class="font-medium mb-1">重点关注</div>
+            <p class="text-[var(--color-notion-gray-text)]">自己遗漏了哪些分析步骤？判断顺序是否正确？提炼该类型占事的判断规律。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : (
     <div class="border border-[var(--color-notion-border)] rounded-lg p-6">
-      <div class="text-sm text-[var(--color-notion-gray-text)] mb-2">暂无案例</div>
+      <div class="text-sm text-[var(--color-notion-gray-text)] mb-4">🚧 正在整理</div>
       <p class="text-sm text-[var(--color-notion-gray-text)]">
-        老师正在整理案例中，即将上线。
+        {name}案例库正在由老师整理中，即将上线。
       </p>
     </div>
-  </div>
+  )}
 </SubjectLayout>

@@ -1,0 +1,190 @@
+---
+import SubjectLayout from '../../../layouts/SubjectLayout.astro';
+
+export async function getStaticPaths() {
+  return [{ params: { subject: 'liuyao', slug: '旺衰判断专项练习' } }];
+}
+
+const { subject } = Astro.params;
+const name = '六爻';
+const menuItems = [
+  { label: '科目介绍', href: `/${subject}` },
+  { label: '路径图', href: `/${subject}/路径图` },
+  { label: '练习题', href: `/${subject}/练习题` },
+  { label: '案例库', href: `/${subject}/案例库` },
+];
+
+const quizData = [
+  // 简单 1-5
+  {
+    n: 1, diff: '简单', tier: 'simple',
+    q: { yue: '卯月', rigan: '甲木', yongshen: '亥水', dongbian: '无' },
+    a: '死地（水生木，水被泄气）',
+    solution: '亥水属水，卯月属木。水在春季为死地——水生木，水被泄气，故死。口诀："亥子丑北方水"——冬季为水旺，春季木旺泄水。',
+  },
+  {
+    n: 2, diff: '简单', tier: 'simple',
+    q: { yue: '午月', rigan: '丙火', yongshen: '寅木', dongbian: '无' },
+    a: '死地（木生火，火旺木泄）',
+    solution: '寅木属木，午月属火。木在夏季为死——木生火，火旺木泄，故死。夏季火旺，木被火泄气，寅木为死地。',
+  },
+  {
+    n: 3, diff: '简单', tier: 'simple',
+    q: { yue: '酉月', rigan: '庚金', yongshen: '申金', dongbian: '无' },
+    a: '帝旺（秋季金临帝旺）',
+    solution: '申金属金，酉月属金。金旺于秋——申酉月金正值帝旺之地。口诀："申酉戌西方金"——秋季金临官、帝旺。',
+  },
+  {
+    n: 4, diff: '简单', tier: 'simple',
+    q: { yue: '亥月', rigan: '壬水', yongshen: '子水', dongbian: '无' },
+    a: '临官/帝旺（水旺冬季）',
+    solution: '子水属水，亥月属水。水旺于冬——亥子月水正值临官或帝旺。水在亥月为临官，在子月为帝旺。',
+  },
+  {
+    n: 5, diff: '简单', tier: 'simple',
+    q: { yue: '辰月', rigan: '戊土', yongshen: '丑土', dongbian: '无' },
+    a: '衰地（土在春季为衰）',
+    solution: '丑土属土，辰月属土。土旺于四季末——辰月土有余气，但非最旺。丑土在辰月处于衰地——辰月木旺克土，丑土受克为衰。',
+  },
+  // 中等 6-10
+  {
+    n: 6, diff: '中等', tier: 'medium',
+    q: { yue: '巳月', rigan: '丁火', yongshen: '亥水', dongbian: '无', richen: '亥水' },
+    a: '旺相（平偏旺）：月令死 + 日辰旺，以日辰为主',
+    solution: '月令角度：巳月火旺，水在巳月为死地——亥水休囚。日辰角度：亥水临日辰，为日建本身——亥水旺相。规则："日建为王，月令为将"——日建权重通常大于月令。综合断为旺相。',
+  },
+  {
+    n: 7, diff: '中等', tier: 'medium',
+    q: { yue: '卯月', rigan: '丙火', yongshen: '午火', dongbian: '无', richen: '戌土' },
+    a: '相（木生火，火有气）',
+    solution: '午火属火，卯月属木。查表：卯月木旺，火为相（我生者相）。日辰戌土与午火无直接生克关系。综合：午火在卯月为相，得日辰戌土无大影响。',
+  },
+  {
+    n: 8, diff: '中等', tier: 'medium',
+    q: { yue: '申月', rigan: '庚金', yongshen: '寅木', dongbian: '无', richen: '亥水' },
+    a: '平相（休中有救）：月令绝/囚 + 日辰亥水生助',
+    solution: '月令角度：申月金旺，寅木在申月为绝地（金克木）或囚地。日辰角度：亥水生寅木——水生木，得生助。综合：月令绝（囚）+ 日辰生 = 平相，寅木有救，不至大凶。',
+  },
+  {
+    n: 9, diff: '中等', tier: 'medium',
+    q: { yue: '丑月', rigan: '己土', yongshen: '卯木', dongbian: '卯木动化亥水（化回头生）', richen: '亥水' },
+    a: '旺相有力：月令囚 + 回头生，动变之力胜月令之克',
+    solution: '月令角度：丑月土旺，卯木为囚地（土旺克木）。动变角度：卯木动化亥水——化回头生，亥水生卯木，大吉。日辰亥水同气旺相。综合：月令囚 + 回头生 = 旺相有力，动变生助之力胜过了月令之克。',
+  },
+  {
+    n: 10, diff: '中等', tier: 'medium',
+    q: { yue: '辰月', rigan: '壬水', yongshen: '申金', dongbian: '申金动化午火（化回头克）', richen: '午火' },
+    a: '休囚受损：月令相 + 回头克 + 日辰助克',
+    solution: '月令角度：辰月土旺，申金为相地（土生金，金有气）。动变角度：申金动化午火——化回头克，午火克申金，大凶。日辰午火与变爻同气——日辰助克，凶上加重。综合：月令相 + 回头克 + 日辰助克 = 休囚受损。',
+  },
+  // 困难 11-15
+  {
+    n: 11, diff: '困难', tier: 'hard',
+    q: { yue: '卯月', rigan: '甲木', yongshen: '亥水', dongbian: '亥水动化辰土（化回头克）', richen: '酉金' },
+    a: '极弱无用：月令死 + 回头克 + 日辰无力',
+    solution: '月令：卯月木旺，亥水为死地（水生木，水被泄）。动变：亥水动化辰土——化回头克，辰土克亥水，凶。日辰酉金生亥水，但与辰土无直接关系。综合三重：极弱无用，用神毫无生气。',
+  },
+  {
+    n: 12, diff: '困难', tier: 'hard',
+    q: { yue: '午月', rigan: '丙火', yongshen: '寅木', dongbian: '寅木动化卯木（化进神）', richen: '辰土' },
+    a: '休囚但有进象：月令死 + 化进神，进神可缓解休囚',
+    solution: '月令：午月火旺，寅木为死地（木生火，火旺木死）。动变：寅木动化卯木——化进神（木同类），主事物向前推进。日辰辰土与寅木无直接生克。综合：月令死 + 化进神 = 休囚有救，进神可缓解休囚之象。',
+  },
+  {
+    n: 13, diff: '困难', tier: 'hard',
+    q: { yue: '亥月', rigan: '癸水', yongshen: '午火', dongbian: '午火动化亥水（化回头克）', richen: '亥水', shiyao: '亥水' },
+    a: '极弱，大凶之象：月令相 + 三重克（动变+日辰+世爻）',
+    solution: '月令：亥月水旺，午火为相地（我克者为相）。动变：午火动化亥水——化回头克，大凶。日辰亥水与变爻同气——日辰助克，凶上加重。世爻亥水克用神午火——求事者自身对用神不利。综合：三重克 = 极弱无用，大凶之象。',
+  },
+  {
+    n: 14, diff: '困难', tier: 'hard',
+    q: { yue: '酉月', rigan: '庚金', yongshen: '亥水', dongbian: '亥水动化申金（化回头生）', richen: '申金', yingyao: '申金' },
+    a: '旺相有力：月令休 + 多重生（动变+日辰+应爻同助）',
+    solution: '月令：酉月金旺，亥水为休地（金生水，水被生但非旺）。动变：亥水动化申金——化回头生，大吉。日辰申金与变爻同气——日辰同生。应爻申金——应爻生用神，对方于求事者有利。综合：月令休 + 三重生 = 旺相有力，大吉之象。',
+  },
+  {
+    n: 15, diff: '困难（综合）', tier: 'hard',
+    q: { yue: '寅月', rigan: '乙木', yongshen: '亥水', dongbian: '亥水动化卯木（化进神）；卯木动化辰土（化回头克）', richen: '亥水' },
+    a: '平相：月令死 + 日辰助 + 进神；求财有耗，应期在卯日或辰日',
+    solution: '月令死 + 日辰同气 + 化进神 = 平相有力。但忌神辰土动，对求财不利——求财有阻力，需防消耗。动变链条：亥水→卯木（进神，生）→辰土（克）= 财源有通路但有消耗。最终判断：财可求，但须防损耗。',
+  },
+];
+---
+
+<SubjectLayout title="六爻 - 旺衰判断专项练习" currentPath={`/${subject}`} sidebarItems={menuItems}>
+  <h1 class="text-2xl font-bold mb-2">六爻 · 旺衰判断专项练习</h1>
+  <p class="text-[var(--color-notion-gray-text)] mb-6">共 15 题 | 简单（第 1-5 题）· 中等（第 6-10 题）· 困难（第 11-15 题）</p>
+
+  <!-- 基础概念速查 -->
+  <div class="mb-8 p-4 bg-gray-50 border border-[var(--color-notion-border)] rounded-lg">
+    <h2 class="font-semibold mb-3 text-sm">📖 基础概念速查</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+      <div><strong>月令旺衰：</strong>木旺春、火旺夏、金旺秋、水旺冬、土旺四季末</div>
+      <div><strong>日建权重：</strong>"日建为王，月令为将"</div>
+      <div><strong>动变优先：</strong>"动变为先"——回头生克优先</div>
+    </div>
+  </div>
+
+  <div class="space-y-6">
+    {quizData.map(q => (
+      <div class={`border rounded-lg p-5 ${q.tier === 'simple' ? 'border-green-200 bg-green-50/30' : q.tier === 'medium' ? 'border-yellow-200 bg-yellow-50/30' : 'border-red-200 bg-red-50/30'}`}>
+        <div class="flex items-center gap-2 mb-3">
+          <span class={`text-xs px-2 py-0.5 rounded font-medium ${q.tier === 'simple' ? 'bg-green-100 text-green-700' : q.tier === 'medium' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}`}>
+            {q.diff}
+          </span>
+          <span class="text-sm font-semibold">第 {q.n} 题</span>
+        </div>
+
+        <!-- 题目 -->
+        <div class="mb-4 p-3 bg-white border border-[var(--color-notion-border)] rounded text-sm">
+          <div class="font-medium mb-2">题目条件：</div>
+          <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+            <div>月令：<strong>{q.q.yue}</strong></div>
+            <div>日干：<strong>{q.q.rigan}</strong></div>
+            <div>用神地支：<strong>{q.q.yongshen}</strong></div>
+            <div>动变：<strong>{q.q.dongbian}</strong></div>
+            {q.q.richen && <div>日辰：<strong>{q.q.richen}</strong></div>}
+            {q.q.shiyao && <div>世爻地支：<strong>{q.q.shiyao}</strong></div>}
+            {q.q.yingyao && <div>应爻地支：<strong>{q.q.yingyao}</strong></div>}
+          </div>
+          <div class="mt-2 font-medium">问题：请判断用神 {q.q.yongshen} 的旺衰状态</div>
+        </div>
+
+        <!-- 答案 -->
+        <details class="group">
+          <summary class="cursor-pointer text-sm font-medium text-blue-600 hover:text-blue-800 mb-2">
+            ▶ 查看答案：{q.a}
+          </summary>
+          <div class="p-3 bg-blue-50 border border-blue-200 rounded text-sm">
+            <div class="font-medium mb-1">解题思路：</div>
+            <p class="text-xs text-[var(--color-notion-gray-text)]">{q.solution}</p>
+          </div>
+        </details>
+      </div>
+    ))}
+  </div>
+
+  <!-- 答案汇总表 -->
+  <div class="mt-10 border border-[var(--color-notion-border)] rounded-lg p-5">
+    <h2 class="font-semibold mb-4">📋 答案汇总表</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-xs">
+        <thead>
+          <tr class="border-b">
+            <th class="text-left py-1 pr-4">题号</th><th class="text-left py-1 pr-4">月令</th><th class="text-left py-1 pr-4">用神</th><th class="text-left py-1">旺衰结论</th>
+          </tr>
+        </thead>
+        <tbody>
+          {quizData.map(q => (
+            <tr class="border-b border-gray-100">
+              <td class="py-1 pr-4">{q.n}</td>
+              <td class="py-1 pr-4">{q.q.yue}</td>
+              <td class="py-1 pr-4">{q.q.yongshen}</td>
+              <td class="py-1">{q.a.split('：')[0]}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</SubjectLayout>

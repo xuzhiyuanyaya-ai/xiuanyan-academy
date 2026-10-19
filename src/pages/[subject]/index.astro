@@ -73,8 +73,23 @@ const menuItems = [
   </div>
 
   <script>
-    import { getSubjectCompletionPercent } from '../../components/ProgressStore.ts';
+    import { getSubjectProgress } from '../../components/ProgressStore.ts';
     const subjectId = document.currentScript?.dataset.subject || 'liuyao';
-    // Progress would be loaded client-side from localStorage
+    try {
+      const progress = getSubjectProgress(subjectId);
+      const totalPaths = 8; // six Yao has 8 milestones
+      const completed = progress.completedPaths.length;
+      const percent = totalPaths > 0 ? Math.round((completed / totalPaths) * 100) : 0;
+      const bar = document.querySelector(`#progress-${subjectId} ProgressBar`);
+      if (bar) {
+        bar.setAttribute('value', String(percent));
+        bar.setAttribute('max', '100');
+      }
+      const statEl = document.querySelector(`#progress-${subjectId}`)?.parentElement?.querySelector('.text-xs');
+      if (statEl) {
+        const quizCount = Object.keys(progress.quizResults || {}).length;
+        statEl.textContent = `路径节点 ${completed} / ${totalPaths} 已完成 · 练习题 ${quizCount} / 0 已完成`;
+      }
+    } catch(e) {}
   </script>
 </SubjectLayout>
