@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://xiuanyan-academy.github.io',
+  site: 'https://xuzhiyuanyaya-ai.github.io',
   base: '/xiuanyan-academy/',
   output: 'static',
   vite: {
